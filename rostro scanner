@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escáner de Rostro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin: 20px;
+    }
+    video, canvas {
+      margin-top: 20px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      max-width: 90%;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Escáner de Rostro (Demo)</h1>
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <br>
+  <button id="capturar">Capturar Foto</button>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const button = document.getElementById('capturar');
+
+    // Pedir acceso a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Error al acceder a la cámara: " + err);
+      });
+
+    // Capturar foto
+    button.addEventListener('click', () => {
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Mostrar la imagen capturada
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png');
+      img.style.marginTop = "20px";
+      img.style.border = "2px solid #fff";
+      img.style.borderRadius = "10px";
+      document.body.appendChild(img);
+    });
+  </script>
+</body>
+</html>
